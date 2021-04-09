@@ -1,6 +1,6 @@
+import gsap from "gsap";
 import * as THREE from "three";
 import { Cell } from "./Cell";
-
 export class Player extends Cell {
   constructor(public x, public y, public z) {
     super(x, y, z, true);
@@ -9,7 +9,9 @@ export class Player extends Cell {
   moveLeft(
     camera: THREE.PerspectiveCamera,
     gridMap: Map<String, Cell>,
-    keyGen
+    keyGen,
+    gridHeight,
+    gridLength
   ) {
     const nextCoords = {
       x: this.x + 1,
@@ -28,14 +30,22 @@ export class Player extends Cell {
       }
       this.group.position.x += 1;
       this.x += 1;
-      // camera.position.x += 1;
+      gsap.to(camera.position, {
+        x:
+          camera.position.x + 1 < gridLength + 10
+            ? camera.position.x + 1
+            : camera.position.x,
+        duration: 0.3,
+      });
     }
   }
 
   moveRight(
     camera: THREE.PerspectiveCamera,
     gridMap: Map<String, Cell>,
-    keyGen
+    keyGen,
+    gridHeight,
+    gridLength
   ) {
     const nextCoords = {
       x: this.x - 1,
@@ -54,14 +64,22 @@ export class Player extends Cell {
       }
       this.group.position.x -= 1;
       this.x -= 1;
-      // camera.position.x -= 1;
+      gsap.to(camera.position, {
+        x:
+          camera.position.x - 1 > -2
+            ? camera.position.x - 1
+            : camera.position.x,
+        duration: 0.3,
+      });
     }
   }
 
   moveForward(
     camera: THREE.PerspectiveCamera,
     gridMap: Map<String, Cell>,
-    keyGen
+    keyGen,
+    gridHeight,
+    gridLength
   ) {
     const nextCoords = {
       x: this.x,
@@ -81,14 +99,23 @@ export class Player extends Cell {
       }
       this.group.position.z += 1;
       this.z += 1;
-      // camera.position.z += 1;
+
+      gsap.to(camera.position, {
+        z:
+          camera.position.z + 1 < gridHeight + 50
+            ? camera.position.z + 1
+            : camera.position.z,
+        duration: 0.3,
+      });
     }
   }
 
   moveBack(
     camera: THREE.PerspectiveCamera,
     gridMap: Map<String, Cell>,
-    keyGen
+    keyGen,
+    gridHeight,
+    gridLength
   ) {
     const nextCoords = {
       x: this.x,
@@ -108,7 +135,13 @@ export class Player extends Cell {
 
       this.group.position.z -= 1;
       this.z -= 1;
-      // camera.position.z -= 1;
+      gsap.to(camera.position, {
+        z:
+          camera.position.z - 1 > 10
+            ? camera.position.z - 1
+            : camera.position.z,
+        duration: 0.3,
+      });
     }
   }
 }

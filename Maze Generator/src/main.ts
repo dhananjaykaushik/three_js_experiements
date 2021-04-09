@@ -1,10 +1,11 @@
+import gsap from "gsap";
 import * as THREE from "three";
 import { Group } from "three";
-import oc from "three-orbit-controls";
+// import oc from "three-orbit-controls";
 import { Cell } from "./classes/Cell";
 import { Player } from "./classes/Player";
 
-const OrbitControls = oc(THREE);
+// const OrbitControls = oc(THREE);
 // Grid constants
 const GRID_HEIGHT = 10;
 const GRID_LENGTH = 10;
@@ -29,10 +30,10 @@ const renderer = new THREE.WebGLRenderer({
 });
 // renderer.setClearColor('')
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.update();
-const axesHelper = new THREE.AxesHelper(12);
-scene.add(axesHelper);
+// const controls = new OrbitControls(camera, renderer.domElement);
+// controls.update();
+// const axesHelper = new THREE.AxesHelper(12);
+// scene.add(axesHelper);
 
 const keyGen = (x, y, z) => {
   return `${x}|${y}|${z}`;
@@ -160,27 +161,58 @@ window.addEventListener("keydown", (event) => {
   switch (key) {
     case "arrowup":
     case "w":
-      player.moveBack(camera, gridMap, keyGen);
+      player.moveBack(camera, gridMap, keyGen, GRID_HEIGHT, GRID_LENGTH);
       break;
     case "arrowright":
     case "d":
-      player.moveLeft(camera, gridMap, keyGen);
+      player.moveLeft(camera, gridMap, keyGen, GRID_HEIGHT, GRID_LENGTH);
       break;
     case "arrowdown":
     case "s":
-      player.moveForward(camera, gridMap, keyGen);
+      player.moveForward(camera, gridMap, keyGen, GRID_HEIGHT, GRID_LENGTH);
       break;
     case "arrowleft":
     case "a":
-      player.moveRight(camera, gridMap, keyGen);
+      player.moveRight(camera, gridMap, keyGen, GRID_HEIGHT, GRID_LENGTH);
       break;
   }
 });
-camera.lookAt(mainGroup.position);
+
+let cameraMoved = null;
 
 const renderScene = () => {
   requestAnimationFrame(renderScene);
-  controls.update();
+  if (
+    player.group.position.z > GRID_HEIGHT / 2 &&
+    player.group.position.x > GRID_LENGTH / 2
+  ) {
+    if (!cameraMoved) {
+      cameraMoved = {
+        x: camera.position.x,
+        y: camera.position.y,
+        z: camera.position.z,
+      };
+      gsap.to(camera.position, {
+        x: camera.position.x + 4,
+        y: camera.position.y + 6,
+        z: camera.position.z + 12,
+        duration: 0.5,
+      });
+    }
+  } else {
+    if (cameraMoved) {
+      // Back to originals
+      gsap.to(camera.position, {
+        x: cameraMoved.x,
+        y: cameraMoved.y,
+        z: cameraMoved.z,
+        duration: 0.5,
+      });
+      cameraMoved = null;
+    }
+  }
+  camera.lookAt(mainGroup.position);
+  // controls.update();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.render(scene, camera);
 };
