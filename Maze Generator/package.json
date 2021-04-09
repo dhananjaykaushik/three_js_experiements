@@ -1,0 +1,21 @@
+{
+  "name": "maze_generator",
+  "version": "1.0.0",
+  "description": "Maze generator in three js",
+  "scripts": {
+    "devServe": "parcel src/index.html",
+    "build": "parcel build src/index.html --dist-dir dist/build"
+  },
+  "devDependencies": {
+    "@parcel/transformer-image": "^2.0.0-beta.2",
+    "@parcel/transformer-sass": "2.0.0-beta.2",
+    "parcel": "^2.0.0-beta.2",
+    "three-orbit-controls": "^82.1.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "gsap": "^3.6.1",
+    "three": "^0.127.0"
+  }
+}
