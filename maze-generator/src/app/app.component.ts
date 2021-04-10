@@ -16,8 +16,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // const OrbitControls = oc(THREE);
     // Grid constants
-    const GRID_HEIGHT = 25;
-    const GRID_LENGTH = 25;
+    const GRID_HEIGHT = 16;
+    const GRID_LENGTH = 16;
 
     // Creating Scene
     const scene = new THREE.Scene();
@@ -166,7 +166,7 @@ export class AppComponent implements OnInit {
     player.drawCube();
     mainGroup.add(gridGroup, player.group);
     scene.add(mainGroup);
-    // camera.position.set(GRID_LENGTH / 0.5, GRID_LENGTH * 3.5, GRID_HEIGHT * 3);
+    camera.position.set(GRID_LENGTH * 2, GRID_LENGTH * 3.5, GRID_HEIGHT * 3);
     // camera.lookAt(mainGroup.position);
     window.addEventListener('keydown', (event) => {
       const key = event.key.toLowerCase();
@@ -191,64 +191,63 @@ export class AppComponent implements OnInit {
     });
 
     // mainGroup.position.z -= GRID_LENGTH * 2;
-    // let cameraMoved = null;
 
-    const updateCameraPosition = () => {
-      //creating an offset position for camera with respect to the car
-      var offset = new THREE.Vector3(
-        player.group.position.x - 2,
-        player.group.position.y + 12,
-        player.group.position.z + 8
-      );
-      // tried to create delay position value for enable smooth transition for camera
-      // camera.position.lerp(offset, 1);
-      gsap.to(camera.position, {
-        x: offset.x,
-        y: offset.y,
-        z: offset.z,
-        duration: 0.2,
-      });
-      // updating lookat alway look at the player
-      camera.lookAt(player.group.position);
-    };
+    // const updateCameraPosition = () => {
+    //   //creating an offset position for camera with respect to the car
+    //   var offset = new THREE.Vector3(
+    //     player.group.position.x - 2,
+    //     player.group.position.y + 12,
+    //     player.group.position.z + 8
+    //   );
+    //   // tried to create delay position value for enable smooth transition for camera
+    //   // camera.position.lerp(offset, 1);
+    //   gsap.to(camera.position, {
+    //     x: offset.x,
+    //     y: offset.y,
+    //     z: offset.z,
+    //     duration: 0.2,
+    //   });
+    //   // updating lookat alway look at the player
+    //   camera.lookAt(player.group.position);
+    // };
 
-    updateCameraPosition();
-
+    // updateCameraPosition();
+    let cameraMoved = null;
     const renderScene = () => {
       requestAnimationFrame(renderScene);
-      // if (
-      //   player.group.position.z > GRID_HEIGHT / 2 &&
-      //   player.group.position.x > GRID_LENGTH / 2
-      // ) {
-      //   if (!cameraMoved) {
-      //     cameraMoved = {
-      //       x: camera.position.x,
-      //       y: camera.position.y,
-      //       z: camera.position.z,
-      //     };
-      //     gsap.to(camera.position, {
-      //       x: camera.position.x + 12,
-      //       y: camera.position.y + 12,
-      //       z: camera.position.z + 20,
-      //       duration: 0.5,
-      //     });
-      //   }
-      // } else {
-      //   if (cameraMoved) {
-      //     // Back to originals
-      //     gsap.to(camera.position, {
-      //       x: cameraMoved.x,
-      //       y: cameraMoved.y,
-      //       z: cameraMoved.z,
-      //       duration: 0.5,
-      //     });
-      //     cameraMoved = null;
-      //   }
-      // }
-      // camera.lookAt(mainGroup.position);
+      if (
+        player.group.position.z > GRID_HEIGHT / 2 &&
+        player.group.position.x > GRID_LENGTH / 2
+      ) {
+        if (!cameraMoved) {
+          cameraMoved = {
+            x: camera.position.x,
+            y: camera.position.y,
+            z: camera.position.z,
+          };
+          gsap.to(camera.position, {
+            x: camera.position.x + 12,
+            y: camera.position.y + 12,
+            z: camera.position.z + 20,
+            duration: 0.5,
+          });
+        }
+      } else {
+        if (cameraMoved) {
+          // Back to originals
+          gsap.to(camera.position, {
+            x: cameraMoved.x,
+            y: cameraMoved.y,
+            z: cameraMoved.z,
+            duration: 0.5,
+          });
+          cameraMoved = null;
+        }
+      }
+      camera.lookAt(mainGroup.position);
       // camera.lookAt(player.group.position);
       // controls.update();
-      updateCameraPosition();
+      // updateCameraPosition();
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.render(scene, camera);
     };
