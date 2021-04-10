@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import gsap from 'gsap';
 import * as THREE from 'three';
 import { Group } from 'three';
 import { Cell } from './classes/Cell';
@@ -165,8 +166,8 @@ export class AppComponent implements OnInit {
     player.drawCube();
     mainGroup.add(gridGroup, player.group);
     scene.add(mainGroup);
-    camera.position.set(GRID_LENGTH / 0.5, GRID_LENGTH * 3.5, GRID_HEIGHT * 3);
-    camera.lookAt(mainGroup.position);
+    // camera.position.set(GRID_LENGTH / 0.5, GRID_LENGTH * 3.5, GRID_HEIGHT * 3);
+    // camera.lookAt(mainGroup.position);
     window.addEventListener('keydown', (event) => {
       const key = event.key.toLowerCase();
       switch (key) {
@@ -191,6 +192,28 @@ export class AppComponent implements OnInit {
 
     // mainGroup.position.z -= GRID_LENGTH * 2;
     // let cameraMoved = null;
+
+    const updateCameraPosition = () => {
+      //creating an offset position for camera with respect to the car
+      var offset = new THREE.Vector3(
+        player.group.position.x - 2,
+        player.group.position.y + 12,
+        player.group.position.z + 8
+      );
+      // tried to create delay position value for enable smooth transition for camera
+      // camera.position.lerp(offset, 1);
+      gsap.to(camera.position, {
+        x: offset.x,
+        y: offset.y,
+        z: offset.z,
+        duration: 0.2,
+      });
+      // updating lookat alway look at the player
+      camera.lookAt(player.group.position);
+    };
+
+    updateCameraPosition();
+
     const renderScene = () => {
       requestAnimationFrame(renderScene);
       // if (
@@ -222,9 +245,10 @@ export class AppComponent implements OnInit {
       //     cameraMoved = null;
       //   }
       // }
-      camera.lookAt(mainGroup.position);
+      // camera.lookAt(mainGroup.position);
       // camera.lookAt(player.group.position);
       // controls.update();
+      updateCameraPosition();
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.render(scene, camera);
     };
