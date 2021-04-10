@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import gsap from 'gsap';
 import * as THREE from 'three';
 import { Group } from 'three';
 import { Cell } from './classes/Cell';
@@ -155,18 +154,19 @@ export class AppComponent implements OnInit {
     // const sphere = new THREE.Mesh(geometry, material);
     // sphere.position.set(1.5, 1.5, 0);
     // sphere.scale.set(0.3, 0.3, 0.3);
-    const player = new Player(1, 1, 0);
-    player.drawCube();
-    camera.position.set(GRID_LENGTH * 1.5, GRID_LENGTH * 5, GRID_LENGTH * 3.5);
+    // camera.position.set(4, 30, 20);
 
     // gridGroup.position.x = -Math.floor(GRID_LENGTH / 2);
     // gridGroup.position.y = 1;
     // gridGroup.position.z = -Math.floor(GRID_HEIGHT / 2);
 
     const mainGroup = new THREE.Group();
+    const player = new Player(1, 1, 0);
+    player.drawCube();
     mainGroup.add(gridGroup, player.group);
     scene.add(mainGroup);
-
+    camera.position.set(GRID_LENGTH / 0.5, GRID_LENGTH * 3.5, GRID_HEIGHT * 3);
+    camera.lookAt(mainGroup.position);
     window.addEventListener('keydown', (event) => {
       const key = event.key.toLowerCase();
       switch (key) {
@@ -189,40 +189,41 @@ export class AppComponent implements OnInit {
       }
     });
 
-    let cameraMoved = null;
-
+    // mainGroup.position.z -= GRID_LENGTH * 2;
+    // let cameraMoved = null;
     const renderScene = () => {
       requestAnimationFrame(renderScene);
-      if (
-        player.group.position.z > GRID_HEIGHT / 2 &&
-        player.group.position.x > GRID_LENGTH / 2
-      ) {
-        if (!cameraMoved) {
-          cameraMoved = {
-            x: camera.position.x,
-            y: camera.position.y,
-            z: camera.position.z,
-          };
-          gsap.to(camera.position, {
-            x: camera.position.x + 4,
-            y: camera.position.y + 6,
-            z: camera.position.z + 12,
-            duration: 0.5,
-          });
-        }
-      } else {
-        if (cameraMoved) {
-          // Back to originals
-          gsap.to(camera.position, {
-            x: cameraMoved.x,
-            y: cameraMoved.y,
-            z: cameraMoved.z,
-            duration: 0.5,
-          });
-          cameraMoved = null;
-        }
-      }
+      // if (
+      //   player.group.position.z > GRID_HEIGHT / 2 &&
+      //   player.group.position.x > GRID_LENGTH / 2
+      // ) {
+      //   if (!cameraMoved) {
+      //     cameraMoved = {
+      //       x: camera.position.x,
+      //       y: camera.position.y,
+      //       z: camera.position.z,
+      //     };
+      //     gsap.to(camera.position, {
+      //       x: camera.position.x + 12,
+      //       y: camera.position.y + 12,
+      //       z: camera.position.z + 20,
+      //       duration: 0.5,
+      //     });
+      //   }
+      // } else {
+      //   if (cameraMoved) {
+      //     // Back to originals
+      //     gsap.to(camera.position, {
+      //       x: cameraMoved.x,
+      //       y: cameraMoved.y,
+      //       z: cameraMoved.z,
+      //       duration: 0.5,
+      //     });
+      //     cameraMoved = null;
+      //   }
+      // }
       camera.lookAt(mainGroup.position);
+      // camera.lookAt(player.group.position);
       // controls.update();
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.render(scene, camera);
