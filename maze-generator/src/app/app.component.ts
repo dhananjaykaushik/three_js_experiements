@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import gsap from 'gsap';
 import * as THREE from 'three';
 import { Group } from 'three';
 import { Cell } from './classes/Cell';
@@ -15,18 +16,18 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     // const OrbitControls = oc(THREE);
     // Grid constants
-    const GRID_HEIGHT = 10;
-    const GRID_LENGTH = 10;
+    const GRID_HEIGHT = 25;
+    const GRID_LENGTH = 25;
 
     // Creating Scene
     const scene = new THREE.Scene();
 
     // Camera
     const camera = new THREE.PerspectiveCamera(
-      12,
+      20,
       window.innerWidth / window.innerHeight,
       1,
-      100
+      1000
     );
     scene.add(camera);
 

@@ -29,7 +29,7 @@ export class Cell {
     const material = new THREE.MeshBasicMaterial({ color: 0x0f2027 });
     const materialFloor = new THREE.MeshBasicMaterial({ color: 0x2c5364 });
     const materialPlayer = new THREE.MeshBasicMaterial({
-      map: new TextureLoader().load('src/assets/box.png'),
+      map: new TextureLoader().load('assets/box.png'),
     });
 
     const dimensions = {
