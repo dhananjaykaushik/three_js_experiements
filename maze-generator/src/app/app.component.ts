@@ -31,12 +31,14 @@ export class AppComponent implements OnInit {
     );
     scene.add(camera);
 
+    const canvas = document.querySelector('.webgl') as HTMLCanvasElement;
     // Creating renderer
     const renderer = new THREE.WebGLRenderer({
-      canvas: document.querySelector('.webgl') as HTMLCanvasElement,
+      canvas,
       antialias: true,
       alpha: true,
     });
+    renderer.setSize(window.innerWidth, window.innerHeight);
     // renderer.setClearColor('')
 
     // const controls = new OrbitControls(camera, renderer.domElement);
@@ -189,7 +191,20 @@ export class AppComponent implements OnInit {
           break;
       }
     });
+    window.addEventListener('resize', (event) => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.updateProjectionMatrix();
+    });
 
+    window.addEventListener('dblclick', (event) => {
+      if (!document.fullscreenElement) {
+        canvas.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
     // mainGroup.position.z -= GRID_LENGTH * 2;
 
     // const updateCameraPosition = () => {
@@ -248,7 +263,7 @@ export class AppComponent implements OnInit {
       // camera.lookAt(player.group.position);
       // controls.update();
       // updateCameraPosition();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+
       renderer.render(scene, camera);
     };
 
