@@ -4,6 +4,7 @@ import { fromEvent } from 'rxjs';
 import {
 	AmbientLight,
 	BufferAttribute,
+	CubeTextureLoader,
 	DoubleSide,
 	Mesh,
 	MeshStandardMaterial,
@@ -29,6 +30,8 @@ export class AppComponent implements OnInit {
 		 * Loading Textures
 		 */
 		const textureLoader = new TextureLoader();
+		// For loading environment maps
+		const cubeTextureLoader = new CubeTextureLoader();
 		const boxTexture = textureLoader.load('../assets/box.png');
 		const gradientTexture = textureLoader.load('../assets/3.jpg');
 		const doorTexture = textureLoader.load('../assets/door/door.jpg');
@@ -38,6 +41,25 @@ export class AppComponent implements OnInit {
 		const doorHeightTexture = textureLoader.load(
 			'../assets/door/height.jpg'
 		);
+		const doorMetalnessTexture = textureLoader.load(
+			'../assets/door/metalness.jpg'
+		);
+		const doorRoughnessTexture = textureLoader.load(
+			'../assets/door/roughness.jpg'
+		);
+		const doorNormalTexture = textureLoader.load(
+			'../assets/door/normal.jpg'
+		);
+		const doorAlphaTexture = textureLoader.load('../assets/door/alpha.jpg');
+
+		const environmentMapTexture = cubeTextureLoader.load([
+			'../assets/environmentMaps/5/px.png',
+			'../assets/environmentMaps/5/nx.png',
+			'../assets/environmentMaps/5/py.png',
+			'../assets/environmentMaps/5/ny.png',
+			'../assets/environmentMaps/5/pz.png',
+			'../assets/environmentMaps/5/nz.png',
+		]);
 
 		/**
 		 * Materials
@@ -59,13 +81,21 @@ export class AppComponent implements OnInit {
 		// gradientTexture.generateMipmaps = false;
 
 		const material = new MeshStandardMaterial();
-		material.metalness = 0.5;
-		material.roughness = 0.5;
-		material.map = doorTexture;
-		material.aoMap = aoTexture;
-		material.aoMapIntensity = 1;
-		material.displacementMap = doorHeightTexture;
-		material.displacementScale = 0.01;
+		material.metalness = 0.7;
+		material.roughness = 0.2;
+		// material.map = doorTexture;
+		// material.aoMap = aoTexture;
+		// material.aoMapIntensity = 1;
+		// material.displacementMap = doorHeightTexture;
+		// material.displacementScale = 0.01;
+		// material.metalnessMap = doorMetalnessTexture;
+		// material.roughnessMap = doorRoughnessTexture;
+		// material.normalMap = doorNormalTexture;
+		// material.normalScale.set(0.5, 0.5);
+		// material.transparent = true;
+		// material.alphaMap = doorAlphaTexture;
+
+		material.envMap = environmentMapTexture;
 
 		/**
 		 * Mesh Attributes
