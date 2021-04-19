@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { GUI } from 'dat-gui';
 import {
-	BoxBufferGeometry,
+	AmbientLight,
 	DoubleSide,
 	Mesh,
-	MeshNormalMaterial,
+	MeshToonMaterial,
 	PerspectiveCamera,
 	PlaneBufferGeometry,
+	PointLight,
 	Scene,
+	SphereBufferGeometry,
 	TextureLoader,
 	TorusBufferGeometry,
 	WebGLRenderer,
@@ -33,13 +35,20 @@ export class AppComponent implements OnInit {
 		// const material = new MeshBasicMaterial({
 		// 	map: texture,
 		// });
-		const material = new MeshNormalMaterial();
+		// const material = new MeshNormalMaterial();
+		// const material = new MeshMatcapMaterial();
+		// const material = new MeshDepthMaterial();
+		// const material = new MeshLambertMaterial();
+		// const material = new MeshPhongMaterial();
+		// material.shininess = 100;
+		// material.specular = new Color(0x00ff00);
+		const material = new MeshToonMaterial();
 
 		/**
-		 * Creating Box Mesh
+		 * Creating sphere Mesh
 		 */
-		const boxMesh = new Mesh(
-			new BoxBufferGeometry(1, 1, 1, 4, 4),
+		const sphereMesh = new Mesh(
+			new SphereBufferGeometry(1, 20, 20),
 			material
 		);
 
@@ -67,13 +76,13 @@ export class AppComponent implements OnInit {
 		 */
 		const camera = new PerspectiveCamera(75, this.aspect, 0.1, 100);
 		camera.position.z = -4;
-		camera.lookAt(boxMesh.position);
+		camera.lookAt(sphereMesh.position);
 
 		/**
 		 * Scene
 		 */
 		const scene = new Scene();
-		scene.add(boxMesh, planeMesh, torusMesh, camera);
+		scene.add(sphereMesh, planeMesh, torusMesh, camera);
 
 		/**
 		 * Renderer
@@ -89,8 +98,25 @@ export class AppComponent implements OnInit {
 		const orbitControls = new OrbitControls(camera, renderer.domElement);
 		orbitControls.update();
 
+		/**
+		 * Ambient Light
+		 */
+		const ambientLight = new AmbientLight(0xffffff, 0.5);
+		scene.add(ambientLight);
+
+		/**
+		 * Point Light
+		 */
+		const pointLight = new PointLight(0xffffff, 0.5);
+		scene.add(pointLight);
+
+		/**
+		 * Debugger
+		 */
 		const datGui = new GUI();
-		datGui.add(material, 'wireframe');
+		if ('wireframe' in material) {
+			datGui.add(material, 'wireframe').name('Wireframe');
+		}
 		datGui.domElement = document.querySelector('body') as HTMLElement;
 
 		/**
@@ -101,11 +127,11 @@ export class AppComponent implements OnInit {
 			window.requestAnimationFrame(tick);
 			const elapsedTime = Date.now() - startTime;
 			/**
-			 * Rotating boxMesh
+			 * Rotating sphereMesh
 			 */
-			boxMesh.rotation.x = elapsedTime * 0.0002;
-			boxMesh.rotation.y = elapsedTime * 0.0002;
-			boxMesh.rotation.z = elapsedTime * 0.0002;
+			sphereMesh.rotation.x = elapsedTime * 0.0002;
+			sphereMesh.rotation.y = elapsedTime * 0.0002;
+			sphereMesh.rotation.z = elapsedTime * 0.0002;
 
 			/**
 			 * Rotating planeMesh
