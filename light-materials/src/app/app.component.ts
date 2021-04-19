@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { GUI } from 'dat-gui';
 import {
 	BoxBufferGeometry,
 	DoubleSide,
 	Mesh,
-	MeshBasicMaterial,
+	MeshNormalMaterial,
 	PerspectiveCamera,
 	PlaneBufferGeometry,
 	Scene,
@@ -29,20 +30,27 @@ export class AppComponent implements OnInit {
 		/**
 		 * Materials
 		 */
-		const material = new MeshBasicMaterial({
-			map: texture,
-		});
+		// const material = new MeshBasicMaterial({
+		// 	map: texture,
+		// });
+		const material = new MeshNormalMaterial();
 
 		/**
 		 * Creating Box Mesh
 		 */
-		const boxMesh = new Mesh(new BoxBufferGeometry(1, 1, 1), material);
+		const boxMesh = new Mesh(
+			new BoxBufferGeometry(1, 1, 1, 4, 4),
+			material
+		);
 
 		/**
 		 * Creating Plane Mesh
 		 */
 		material.side = DoubleSide;
-		const planeMesh = new Mesh(new PlaneBufferGeometry(2, 2, 1), material);
+		const planeMesh = new Mesh(
+			new PlaneBufferGeometry(2, 2, 4, 4),
+			material
+		);
 		planeMesh.position.x = -2.5;
 
 		/**
@@ -80,6 +88,10 @@ export class AppComponent implements OnInit {
 		 */
 		const orbitControls = new OrbitControls(camera, renderer.domElement);
 		orbitControls.update();
+
+		const datGui = new GUI();
+		datGui.add(material, 'wireframe');
+		datGui.domElement = document.querySelector('body') as HTMLElement;
 
 		/**
 		 * Game Loop
